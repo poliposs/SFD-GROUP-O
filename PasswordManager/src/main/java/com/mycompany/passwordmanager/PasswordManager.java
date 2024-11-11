@@ -1,9 +1,11 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
 package com.mycompany.passwordmanager;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,100 +13,87 @@ import java.util.Scanner;
 
 /**
  *
- * @author paulp
+ * @author adrianaa
  */
+
 public class PasswordManager {
 
-    public static void main(String[] args) { 
-<<<<<<< HEAD
-        private static final
-                Map<String, String> users = new HashMap<>();
-        
-        public static void main(String[] args){
-            Scanner scanner = new Scanner (System.in);
-            boolean running = true;
-            
-            while (running){
-                System.out.println("1. Register");
-                System.out.println("2. Login");
-                System.out.println("3. Exit");
-                System.out.println("Ennter your choice");
-                
-                int choice = scanner.nextInt();
-                
-                scanner.nextLine();
-                
-                switch (choice){
-                    case 1:
-                        registerUser(scanner);
-                        
-                        break;
-                    case 2:
-                        loginUser(scanner);
-                        break;
-                    case 3 :
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Invalid choice , choose again");
-                    
-                }
-                
-                
-                
-                
+    // Using a static map to store users and their hashed passwords
+    private static final Map<String, String> users = new HashMap<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        // Main loop for the CLI
+        while (running) {
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    registerUser(scanner);
+                    break;
+                case 2:
+                    loginUser(scanner);
+                    break;
+                case 3:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
             }
         }
-        private static void registerUser(Scanner scanner){
-            System.out.print("Enter username:");
-            String username = scanner.nextLine();
-            
-            System.out.print("Enter password:");
-            String password  = scanner.nextLie();
-            
-            String hashedPassword = hashedPassword(password);
-            users.put(username, hashedPassword);
-            
-            System.out.print("User is registered succesfully");
-            
-        }
-            private static void loginuser(Scanner scanner ){
-                System.out.print("Enter username:");
-                String username = scanner.nextLine();
-                
-                System.out.print("Enter password:");
-                String password = scanner.nextLine();
-                
-                String hashedPassword = new hashedPassword(password);
-                if(users.containsKey(username) && users.get(username).equals(hahsedPassword)){
-                    System.out.println("Login succesful.");
-                }else{
-                    System.out.println("Invalid username or password.");
-                    
-                }
-                
-            }
-            private static String hashPassword(String password){
-                try{
-                    MessageDigest md = MessageDigest.getInstance("SHA- 256");
-                    byte[]
-                            hashedBytes = md.Digest(password.getBytes());
-                    StringBuilder sb = new StringBuilder();
-                    for(byte b : hashedBytes){
-                        sb.append(String.format("%02x", b));
-                    }
-                        return sb.toString();
-                }catch (NoSuchAlgorithmException e){
-                    e.printStackTrace();
-                    return null;
-                    
-                    
-                    }
-                }
-            }
-    
-=======
-        hubhubhuebu
+
+        scanner.close();
     }
->>>>>>> 5ef4a1d333872a7390618890402ab78ac27f1bb5
+
+    private static void registerUser(Scanner scanner) {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        String hashedPassword = hashPassword(password);
+        users.put(username, hashedPassword);
+
+        System.out.println("User registered successfully.");
+    }
+
+    private static void loginUser(Scanner scanner) {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        String hashedPassword = hashPassword(password);
+
+        if (users.containsKey(username) && users.get(username).equals(hashedPassword)) {
+            System.out.println("Login successful.");
+        } else {
+            System.out.println("Invalid username or password.");
+        }
+    }
+
+    private static String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashedBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

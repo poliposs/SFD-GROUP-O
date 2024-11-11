@@ -42,7 +42,6 @@ public class PasswordsMethod {
      */  
     public static void main(String[] args) {  
         createNewTable(); 
-        innuuijuni
     }    
     
     
