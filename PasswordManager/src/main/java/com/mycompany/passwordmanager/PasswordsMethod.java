@@ -15,7 +15,7 @@ import java.sql.Statement;
  *
  * @author paulp
  */
-public class Database {
+public class PasswordsMethod {
     
         public static void createNewTable() {  
         // SQLite connection string  
