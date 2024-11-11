@@ -16,6 +16,7 @@ import java.util.Scanner;
 public class PasswordManager {
 
     public static void main(String[] args) { 
+<<<<<<< HEAD
         private static final
                 Map<String, String> users = new HashMap<>();
         
@@ -102,4 +103,8 @@ public class PasswordManager {
                 }
             }
     
+=======
+        hubhubhuebu
+    }
+>>>>>>> 5ef4a1d333872a7390618890402ab78ac27f1bb5
 }
