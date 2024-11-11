@@ -4,10 +4,43 @@
  */
 package com.mycompany.passwordmanager;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.DatabaseMetaData;  
+import java.sql.Statement;
+
+
 /**
  *
  * @author paulp
  */
 public class Database {
     
+        public static void createNewTable() {  
+        // SQLite connection string  
+        String url = "jdbc:sqlite:SSSIT.db";  
+          
+        // SQL statement for creating a new table  
+        String sql = "CREATE TABLE IF NOT EXISTS users (\n"  
+                + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"  
+                + " username text VARCHAR(25) NOT NULL,\n"  
+                + " password_hash VARCHAR(64) NOT NULL\n"  
+                + ");";  
+          
+        try{  
+            Connection conn = DriverManager.getConnection(url);  
+            Statement stmt = conn.createStatement();  
+            stmt.execute(sql);  
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+    }  
+   
+    /** 
+     * @param args the command line arguments 
+     */  
+    public static void main(String[] args) {  
+        createNewTable();  
+    }    
 }

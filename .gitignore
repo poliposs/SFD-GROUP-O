@@ -10,3 +10,4 @@ nbdist/
 .nb-gradle/
 *.class
 *.ini
+/PasswordManager/target/
