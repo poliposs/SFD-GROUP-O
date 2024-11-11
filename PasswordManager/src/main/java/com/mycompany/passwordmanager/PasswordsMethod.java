@@ -22,11 +22,11 @@ public class PasswordsMethod {
         String url = "jdbc:sqlite:SSSIT.db";  
           
         // SQL statement for creating a new table  
-        String sql = "CREATE TABLE IF NOT EXISTS users (\n"  
-                + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"  
-                + " username text VARCHAR(25) NOT NULL,\n"  
-                + " password_hash VARCHAR(64) NOT NULL\n"  
-                + ");";  
+        String sql = """
+                     CREATE TABLE IF NOT EXISTS passwords (
+                      websiteName text VARCHAR(25) NOT NULL,
+                      passwordHash VARCHAR(64) NOT NULL
+                     );""";  
           
         try{  
             Connection conn = DriverManager.getConnection(url);  
@@ -43,4 +43,6 @@ public class PasswordsMethod {
     public static void main(String[] args) {  
         createNewTable();  
     }    
+    
+    
 }
