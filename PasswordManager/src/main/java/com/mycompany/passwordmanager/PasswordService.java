@@ -26,6 +26,8 @@ public class PasswordService {
     public PasswordService(String website, String password) {
         this.website = website;
         this.password = password;
+        this.name = name;
+        this.email = email;
     }
 
     public PasswordService() throws Exception {
@@ -56,7 +58,7 @@ public class PasswordService {
 
         // Main loop for the CLI
         while (running) {
-            System.out.println("1. Register a website and password");
+            System.out.println("1. Enter website to encrypt name, email and password");
             System.out.println("2. Retrieve password");
             System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
@@ -85,6 +87,12 @@ public class PasswordService {
     private static void savePasword(Scanner scanner) {
         System.out.print("Enter website: ");
         website = scanner.nextLine();
+        
+        System.out.print("Enter Full name: ");
+        name = scanner.nextLine();
+        
+        System.out.print("Enter email: ");
+        email = scanner.nextLine();
 
         System.out.print("Enter password: ");
         password = scanner.nextLine();
@@ -99,9 +107,6 @@ public class PasswordService {
     private static void retrievePassword(Scanner scanner) {
         System.out.print("Enter website: ");
         website = scanner.nextLine();
-
-        System.out.print("Enter password: ");
-        password = scanner.nextLine();
 
         String hashedPassword = hashPassword(password);
 
