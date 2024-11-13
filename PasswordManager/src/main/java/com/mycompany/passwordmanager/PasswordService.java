@@ -6,9 +6,11 @@ package com.mycompany.passwordmanager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -17,8 +19,8 @@ public class PasswordService {
 
     // Using a static map to store users and their hashed passwords
     private static final HashMap<String, String> users = new HashMap<>();
-    private static SecretKey key;
-    private static Cipher ci;
+    private SecretKey key;
+    static Cipher ci;
     private static String website, password, name, email;
 
     public PasswordService(String website, String password, String name, String email) {
@@ -52,31 +54,26 @@ public class PasswordService {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String encrypt = null;
         boolean running = true;
 
         // Main loop for the CLI
         while (running) {
             System.out.println("1. Enter website to encrypt name, email and password");
             System.out.println("2. Retrieve password");
-            System.out.println("3. Decrypt password");
-            System.out.println("4. Exit");
-            System.out.println("Enter your choice: ");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1:
-                    savePassword(scanner);
+                    savePasword(scanner);
                     break;
                 case 2:
                     retrievePassword(scanner);
                     break;
                 case 3:
-                    decryptPassword(encrypt, scanner);
-                    break;
-                case 4:
                     running = false;
                     break;
                 default:
@@ -87,37 +84,37 @@ public class PasswordService {
         scanner.close();
     }
 
-    private static void savePassword(Scanner scanner) {
-        System.out.println("Enter website: ");
+    private static void savePasword(Scanner scanner) {
+        System.out.print("Enter website: ");
         website = scanner.nextLine();
-
-        System.out.println("Enter Full name: ");
+        
+        System.out.print("Enter Full name: ");
         name = scanner.nextLine();
-
-        System.out.println("Enter email: ");
+        
+        System.out.print("Enter email: ");
         email = scanner.nextLine();
 
-        System.out.println("Enter password: ");
+        System.out.print("Enter password: ");
         password = scanner.nextLine();
 
-        String encryptedText = encryptPassword(password);
+        String hashedPassword = hashPassword(password);
 
-        users.put(website, encryptedText);
+        users.put(website, hashedPassword);
 
-        System.out.println("Details successfully saved." + key);
+        System.out.println("User registered successfully.");
     }
 
-    private static void retrievePassword(Scanner scanner) throws Exception {
-        System.out.println("Enter website: ");
+    private static void retrievePassword(Scanner scanner) {
+        System.out.print("Enter website: ");
         website = scanner.nextLine();
 
-        String encryption = encryptPassword(password);
+        String hashedPassword = hashPassword(password);
 
-        if (users.containsKey(website) && users.get(website).equals(encryption)) {
-            System.out.println("Verification complete.");
-            System.out.println("Encrypted password: " + encryption);
+        if (users.containsKey(website) && users.get(website).equals(hashedPassword)) {
+            System.out.println("Login successful.");
+            System.out.println("Password: " + password + "\n" + "Hashed password: " + hashedPassword);
         } else {
-            System.out.println("Invalid website.");
+            System.out.println("Invalid username or password.");
         }
     }
     
@@ -155,45 +152,24 @@ public class PasswordService {
     }
 
 
-    public static String encryptPassword(String plainText) {
-        try {
-            if (ci == null) {
-                ci = Cipher.getInstance("AES");
-            }
-            if (key == null) {
-                KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-                keyGen.init(128);
-                key = keyGen.generateKey();
-            }
-            ci.init(Cipher.ENCRYPT_MODE, key);
-
-            byte[] plainTextByte = plainText.getBytes();
-            byte[] encryptedByte = ci.doFinal(plainTextByte);
-            return Base64.getEncoder().encodeToString(encryptedByte);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static String encrypt(String plainText, SecretKey secretKey)
+            throws Exception {
+        plainText = password;
+        byte[] plainTextByte = plainText.getBytes();
+        ci.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encryptedByte = ci.doFinal(plainTextByte);
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encryptedText = encoder.encodeToString(encryptedByte);
+        return encryptedText;
     }
 
-    public static String decryptPassword(String encryptedText, Scanner scanner) throws Exception {
-        System.out.println("Enter website: ");
-        website = scanner.nextLine();
-
-        if (encryptedText == null) {
-            encryptedText = users.get(website);
-            if (encryptedText == null) {
-                System.out.println("Invalid website key.");
-                return null;
-            }
-        }
-
+    public static String decrypt(String encryptedText, SecretKey secretKey)
+            throws Exception {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] encryptedTextByte = decoder.decode(encryptedText);
-        ci.init(Cipher.DECRYPT_MODE, key);
+        ci.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] decryptedByte = ci.doFinal(encryptedTextByte);
         String decryptedText = new String(decryptedByte);
-        System.out.println("Here is your password: " + decryptedText);
         return decryptedText;
     }
 
@@ -210,25 +186,5 @@ public class PasswordService {
             e.printStackTrace();
             return null;
         }
-        public static boolean deleteWebsite(Strinug website){
-            if (users.containsKey(website)){
-                users.remove(website);
-                return true;// return if 'website' is deleted succesfully
-                
-            }else{
-                return false;//return if 'website' isnt found 
-            }
-            public static boolean updateWebsite(String website, String name,String newEmail,String newPassword){
-                if(users.containsKey(website)){
-                    String hashedPassword = hashedPassword(newPassword);//hash the new password 
-                    UserData updateData = new UserData(newName, newEmail, hashedPassword);
-                    users.put(website, updateData);//update the entry with new data
-                    return true;//succesful
-                    
-                }else{
-                    return false; //website not found 
-                }
-            }
-        }
     }
-
+}
