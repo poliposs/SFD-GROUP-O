@@ -210,5 +210,25 @@ public class PasswordService {
             e.printStackTrace();
             return null;
         }
+        public static boolean deleteWebsite(Strinug website){
+            if (users.containsKey(website)){
+                users.remove(website);
+                return true;// return if 'website' is deleted succesfully
+                
+            }else{
+                return false;//return if 'website' isnt found 
+            }
+            public static boolean updateWebsite(String website, String name,String newEmail,String newPassword){
+                if(users.containsKey(website)){
+                    String hashedPassword = hashedPassword(newPassword);//hash the new password 
+                    UserData updateData = new UserData(newName, newEmail, hashedPassword);
+                    users.put(website, updateData);//update the entry with new data
+                    return true;//succesful
+                    
+                }else{
+                    return false; //website not found 
+                }
+            }
+        }
     }
-}
+
