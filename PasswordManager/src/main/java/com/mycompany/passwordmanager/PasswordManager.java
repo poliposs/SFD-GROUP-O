@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 public class PasswordManager {
 
     public static void main(String[] args) { 
+        PasswordGUI myGUI = new PasswordGUI();
+         myGUI.setVisible();
         
     }
 }
