@@ -23,13 +23,13 @@ public class PasswordService {
     static Cipher ci;
     private static String website, password, name, email;
 
-    public PasswordService(String website, String password) {
+    public PasswordService(String website, String password, String name, String email) {
         this.website = website;
         this.password = password;
         this.name = name;
         this.email = email;
     }
-
+    
     public PasswordService() throws Exception {
         try {
             // Generate a Secret Key for AES encryption
@@ -117,6 +117,40 @@ public class PasswordService {
             System.out.println("Invalid username or password.");
         }
     }
+    
+    private static void deletePassword(Scanner scanner){
+        System.out.print("Enter website to delete: ");
+        String deleteWebsite = scanner.nextLine();     
+        
+        if(users.containsKey(website)){
+            users.remove(deleteWebsite);
+            System.out.println("Password for " + deleteWebsite + " has been deleted");   
+        }else{
+            System.out.println("Deletion successful");
+        }
+    }
+    
+    private static void updatePassword(Scanner scanner) {
+        System.out.print("Enter website to update: ");
+        String websiteToUpdate = scanner.nextLine();
+
+        // Check if the website exists in the storage
+        if (users.containsKey(websiteToUpdate)) {
+            System.out.print("Enter new password: ");
+            String newPassword = scanner.nextLine();
+
+            // Hash the new password
+            String hashedNewPassword = hashPassword(newPassword);
+
+            // Update the password in the map
+            users.put(websiteToUpdate, hashedNewPassword);
+
+            System.out.println("Password for " + websiteToUpdate + " has been updated successfully.");
+        } else {
+            System.out.println("No password found for the given website.");
+        }
+    }
+
 
     public static String encrypt(String plainText, SecretKey secretKey)
             throws Exception {
