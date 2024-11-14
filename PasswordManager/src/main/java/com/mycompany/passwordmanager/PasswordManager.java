@@ -14,11 +14,11 @@ import java.awt.event.ActionListener;
  *
  * @author paulp
  */
-public class PasswordManager {
-
-    public static void main(String[] args) { 
-        PasswordGUI myGUI = new PasswordGUI();
-         myGUI.setVisible();
-        
-    }
-}
+//public class PasswordManager {
+//
+//    public static void main(String[] args) { 
+//        PasswordGUI myGUI = new PasswordGUI();
+//         myGUI.setVisible();
+//        
+//    }
+//}

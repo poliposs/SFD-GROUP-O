@@ -28,7 +28,6 @@ public class PasswordGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        deleteBtn = new javax.swing.JButton();
         updateBtn = new javax.swing.JButton();
         retrieveBtn = new javax.swing.JButton();
         saveBtn = new javax.swing.JButton();
@@ -38,13 +37,6 @@ public class PasswordGUI extends javax.swing.JFrame {
         displayArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        deleteBtn.setText("DELETE");
-        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteBtnActionPerformed(evt);
-            }
-        });
 
         updateBtn.setText("UPDATE");
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -66,9 +58,7 @@ public class PasswordGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addGap(164, 164, 164)
                 .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
                 .addComponent(retrieveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -96,7 +86,6 @@ public class PasswordGUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteBtn)
                     .addComponent(updateBtn)
                     .addComponent(retrieveBtn)
                     .addComponent(saveBtn))
@@ -105,32 +94,6 @@ public class PasswordGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        // TODO add your handling code here:
-        deleteBtn.addActionListener( new ActionListener(){
-            
-            public void actionPerformed(ActionEvent e ){
-                String websiteToDelete = nameField.getText().trim();
-                
-                if(!WebsiteToDelete.isEmpty()){
-                    boolean success = PasswordService.delteteWebsite(websiteToDelete);
-                    if(success){
-                        JOptionPane.showMessageDialog(null,"The Website was deleted succesfully");
-                        
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Website not found. No data deleted");
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(null,"Please enter website name to be deleted");
-                }
-                
-                
-            }
-                    
-            
-        });
-    }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
      
@@ -173,7 +136,6 @@ public class PasswordGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton deleteBtn;
     private javax.swing.JTextArea displayArea;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameField;

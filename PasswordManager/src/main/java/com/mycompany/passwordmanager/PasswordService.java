@@ -16,15 +16,9 @@ import java.util.Scanner;
 public class PasswordService {
 
     // Using a static map to store users and their hashed passwords
-<<<<<<< Updated upstream
     private static final HashMap<String, String> users = new HashMap<>();
     private static SecretKey key;
     private static Cipher ci;
-=======
-    private static final HashMap<String, UserData> users = new HashMap<>();
-    private SecretKey key;
-    static Cipher ci;
->>>>>>> Stashed changes
     private static String website, password, name, email;
 
     static {
@@ -98,12 +92,10 @@ public class PasswordService {
 
         String encryptedText = encryptPassword(password);
 
-<<<<<<< Updated upstream
         users.put(website, encryptedText);
-=======
-        UserData userData = new UserData(name, email, hashedPassword);
-        users.put(website, userData);
->>>>>>> Stashed changes
+        
+//        UserData userData = new UserData(name, email, hashedPassword);
+//        users.put(website, encryptedText);
 
         System.out.println("Details successfully saved." + key);
     }
@@ -177,7 +169,8 @@ public class PasswordService {
             e.printStackTrace();
             return null;
         }
-        public static boolean deleteWebsite(Strinug website){
+    }
+        public static boolean deleteWebsite(String website){
             if (users.containsKey(website)){
                 users.remove(website);
                 return true;// return if 'website' is deleted succesfully
@@ -185,17 +178,18 @@ public class PasswordService {
             }else{
                 return false;//return if 'website' isnt found 
             }
-            public static boolean updateWebsite(String website, String name,String newEmail,String newPassword){
-                if(users.containsKey(website)){
-                    String hashedPassword = hashedPassword(newPassword);//hash the new password 
-                    UserData updateData = new UserData(newName, newEmail, hashedPassword);
-                    users.put(website, updateData);//update the entry with new data
-                    return true;//succesful
-                    
-                }else{
-                    return false; //website not found 
-                }
-            }
         }
-    }
+//            public static boolean updateWebsite(String website, String name,String newEmail,String newPassword){
+//                if(users.containsKey(website)){
+//                    String hashedPassword = hashedPassword(newPassword);//hash the new password 
+//                    UserData updateData = new UserData(newName, newEmail, hashedPassword);
+//                    users.put(website, updateData);//update the entry with new data
+//                    return true;//succesful
+//                    
+//                }else{
+//                    return false; //website not found 
+//                }
+//            }
+        }
+ 
 
