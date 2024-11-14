@@ -97,7 +97,7 @@ public class PasswordService {
 //        UserData userData = new UserData(name, email, hashedPassword);
 //        users.put(website, encryptedText);
 
-        System.out.println("Details successfully saved." + key);
+        System.out.println("Details successfully saved.");
     }
 
     private static void retrievePassword(Scanner scanner) throws Exception {
