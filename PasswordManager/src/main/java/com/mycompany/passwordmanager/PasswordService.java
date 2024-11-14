@@ -33,21 +33,13 @@ public class PasswordService {
         }
     }
 
-    public PasswordService(String website, String password) {
-        this.website = website;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-    }
-
-    public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+    public void menu(Scanner scanner) {
         String encrypt = null;
         boolean running = true;
 
         // Main loop for the CLI
         while (running) {
-            System.out.println("1. Enter website to encrypt name, email and password");
+            System.out.println("1. Enter website to encrypt name, email, and password");
             System.out.println("2. Retrieve password");
             System.out.println("3. Decrypt password");
             System.out.println("4. Exit");
@@ -61,10 +53,20 @@ public class PasswordService {
                     savePassword(scanner);
                     break;
                 case 2:
-                    retrievePassword(scanner);
+                    try {
+                        retrievePassword(scanner);
+                    } catch (Exception e) {
+                        System.out.println("Error retrieving password: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                     break;
                 case 3:
-                    decryptPassword(encrypt, scanner);
+                    try {
+                        decryptPassword(encrypt, scanner);
+                    } catch (Exception e) {
+                        System.out.println("Error decrypting password: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                     break;
                 case 4:
                     running = false;
@@ -73,9 +75,8 @@ public class PasswordService {
                     System.out.println("Invalid choice, please try again.");
             }
         }
-
-        scanner.close();
     }
+
 
     private static void savePassword(Scanner scanner) {
         System.out.println("Enter website: ");
