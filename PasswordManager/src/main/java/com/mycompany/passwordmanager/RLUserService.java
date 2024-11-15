@@ -29,20 +29,7 @@ public class RLUserService {
         random.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);
     }
-
-    // Hashes the password with the salt using PBKDF2
-    public static String saltedHashPassword(String userPassword, String salt) {
-        try {
-            KeySpec spec = new PBEKeySpec(userPassword.toCharArray(), salt.getBytes(), 65536, 128);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            byte[] hash = factory.generateSecret(spec).getEncoded();
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
+    
     // Register method that adds a new user
     public boolean register(String userEmail, String userPassword) {
         if (newUsers.containsKey(userEmail)) {
@@ -74,4 +61,19 @@ public class RLUserService {
         }
         return false; // User does not exist
     }
+    
+    // Hashes the password with the salt using PBKDF2
+    public static String saltedHashPassword(String userPassword, String salt) {
+        try {
+            KeySpec spec = new PBEKeySpec(userPassword.toCharArray(), salt.getBytes(), 65536, 128);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
