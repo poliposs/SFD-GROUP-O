@@ -46,6 +46,8 @@ public class RegisterGUI extends javax.swing.JFrame {
         eRegTf = new javax.swing.JTextField();
         pRegTf = new javax.swing.JTextField();
         signBtn = new javax.swing.JButton();
+        generateBTN = new javax.swing.JButton();
+        RPG_LengthSpinner = new javax.swing.JSpinner();
         logInPanel = new javax.swing.JPanel();
         eLbl1 = new javax.swing.JLabel();
         pLbl1 = new javax.swing.JLabel();
@@ -141,6 +143,15 @@ public class RegisterGUI extends javax.swing.JFrame {
             }
         });
 
+        generateBTN.setText("Generate");
+        generateBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateBTNActionPerformed(evt);
+            }
+        });
+
+        RPG_LengthSpinner.setModel(new javax.swing.SpinnerNumberModel(12, 12, 32, 1));
+
         javax.swing.GroupLayout registerPanelLayout = new javax.swing.GroupLayout(registerPanel);
         registerPanel.setLayout(registerPanelLayout);
         registerPanelLayout.setHorizontalGroup(
@@ -158,7 +169,11 @@ public class RegisterGUI extends javax.swing.JFrame {
                             .addComponent(eLbl)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(eRegTf, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(generateBTN)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(RPG_LengthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(98, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
             registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,10 +185,13 @@ public class RegisterGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pLbl)
-                    .addComponent(pRegTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pRegTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(generateBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(RPG_LengthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(signBtn)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         parent.add(registerPanel, "card2");
@@ -258,7 +276,7 @@ public class RegisterGUI extends javax.swing.JFrame {
     private void rDirectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rDirectBtnActionPerformed
         // TODO add your handling code here:
         logInPanel.setVisible(false);
-        registerPanel.setVisible(false);
+        registerPanel.setVisible(true);
 
     }//GEN-LAST:event_rDirectBtnActionPerformed
 
@@ -290,6 +308,13 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         if (users.get(email).equals(hashedPassword)) {
             JOptionPane.showMessageDialog(null, "Login successful! Access granted.");
+             // Open the Password Manager GUI
+            PasswordGUI passwordManager = new PasswordGUI();
+            passwordManager.setVisible(true);
+
+            // Close the current RegisterGUI window
+            this.setVisible(false);
+            this.dispose(); // Optional: Use if you want to fully dispose of this window
         } else {
             JOptionPane.showMessageDialog(null, "Incorrect password. Please try again.");
         }
@@ -305,6 +330,15 @@ public class RegisterGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_exitBtnActionPerformed
+
+    private void generateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateBTNActionPerformed
+        // Retrieve the length from the JSpinner
+        int length = (int) RPG_LengthSpinner.getValue();
+        // Generate the password using the specified length
+        String generatedPassword = PasswordService.generatePassword(length);
+        // Display the password in the text feild
+        pRegTf.setText(generatedPassword);
+    }//GEN-LAST:event_generateBTNActionPerformed
 
     /**
      * @param args the command line arguments
@@ -357,12 +391,14 @@ public class RegisterGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner RPG_LengthSpinner;
     private javax.swing.JPanel btnPanel;
     private javax.swing.JLabel eLbl;
     private javax.swing.JLabel eLbl1;
     private javax.swing.JTextField eLogTf;
     private javax.swing.JTextField eRegTf;
     private javax.swing.JButton exitBtn;
+    private javax.swing.JButton generateBTN;
     private javax.swing.JPanel header;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton lDirectBtn;

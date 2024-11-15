@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.security.SecureRandom;
 
 public class PasswordService {
 
@@ -20,6 +21,18 @@ public class PasswordService {
     private static SecretKey key;
     private static Cipher ci;
     private static String website, password, encryption, decryptedText, email, encryptedText, plainText;
+    
+     // Character pools for password generation
+    private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String DIGITS = "0123456789";
+    private static final String SYMBOLS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/";
+    
+    // Pool of all possible characters
+    private static final String ALL_CHARS = UPPER + LOWER + DIGITS + SYMBOLS;
+
+    // SecureRandom ensures cryptographic-grade randomness
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     public PasswordService(String website, String password, String encryption, String decryptedText, String email) {
         this.website = website;
@@ -43,66 +56,6 @@ public class PasswordService {
         }
     }
 
-//    public void menu(Scanner scanner) {
-//        String encrypt = null;
-//        boolean running = true;
-//
-//        // Main loop for the CLI
-//        while (running) {
-//            System.out.println("1. Enter website to encrypt name, email, and password");
-//            System.out.println("2. Retrieve password");
-//            System.out.println("3. Decrypt password");
-//            System.out.println("4. Exit");
-//            System.out.println("Enter your choice: ");
-//
-//            int choice = scanner.nextInt();
-//            scanner.nextLine(); // Consume newline
-//
-//            switch (choice) {
-////                case 1:
-////                    savePassword();
-////                    break;
-//                case 2:
-//                    try {
-//                    retrievePassword();
-//                } catch (Exception e) {
-//                    System.out.println("Error retrieving password: " + e.getMessage());
-//                    e.printStackTrace();
-//                }
-//                break;
-//                case 3:
-//                    try {
-//                    decryptPassword(encrypt);
-//                } catch (Exception e) {
-//                    System.out.println("Error decrypting password: " + e.getMessage());
-//                    e.printStackTrace();
-//                }
-//                break;
-//                case 4:
-//                    running = false;
-//                    break;
-//                default:
-//                    System.out.println("Invalid choice, please try again.");
-//            }
-//        }
-//    }
-//    public static String savePassword() {
-//        System.out.println("Enter website: ");
-//
-//        System.out.println("Enter Full name: ");
-//
-//        System.out.println("Enter email: ");
-//
-//        System.out.println("Enter password: ");
-//
-//        String encryptedText = encryptPassword(password);
-//
-//        users.put(website, encryptedText);
-//
-////        UserData userData = new UserData(name, email, hashedPassword);
-////        users.put(website, encryptedText);
-//        System.out.println("Details successfully saved.");
-//    }
     public static String retrievePassword() throws Exception {
         System.out.println("Enter website: ");
 
@@ -140,17 +93,51 @@ public class PasswordService {
             throw e;
         }
     }
-//            public static boolean updateWebsite(String website, String name,String newEmail,String newPassword){
-//                if(users.containsKey(website)){
-//                    String hashedPassword = hashedPassword(newPassword);//hash the new password 
-//                    UserData updateData = new UserData(newName, newEmail, hashedPassword);
-//                    users.put(website, updateData);//update the entry with new data
-//                    return true;//succesful
-//                    
-//                }else{
-//                    return false; //website not found 
-//                }
-//            }
+    
+    public static String generatePassword(int length) {
+        // Password length must meet security guidelines
+        if (length < 12) {
+            throw new IllegalArgumentException("Password length must be at least 12 characters");
+        }
+
+        StringBuilder password = new StringBuilder();
+
+        // Step 1: Ensure the password contains at least one character from each category
+        password.append(UPPER.charAt(RANDOM.nextInt(UPPER.length()))); // Add one uppercase letter
+        password.append(LOWER.charAt(RANDOM.nextInt(LOWER.length()))); // Add one lowercase letter
+        password.append(DIGITS.charAt(RANDOM.nextInt(DIGITS.length()))); // Add one digit
+        password.append(SYMBOLS.charAt(RANDOM.nextInt(SYMBOLS.length()))); // Add one symbol
+
+        // Step 2: Fill the rest of the password with random characters from all categories
+        for (int i = 4; i < length; i++) {
+            password.append(ALL_CHARS.charAt(RANDOM.nextInt(ALL_CHARS.length())));
+        }
+
+        // Step 3: Shuffle the password to avoid predictable patterns
+        return shufflePassword(password.toString());
+    }
+
+    /**
+     * Shuffles the characters in the password to improve randomness.
+     *
+     * @param password the password string to shuffle
+     * @return a new shuffled password string
+     */
+    private static String shufflePassword(String password) {
+        // Convert the password into a character array for shuffling
+        char[] chars = password.toCharArray();
+        
+        // Fisher-Yates shuffle algorithm for randomizing the order
+        for (int i = chars.length - 1; i > 0; i--) {
+            int j = RANDOM.nextInt(i + 1); // Select a random index
+            char temp = chars[i];         // Swap characters
+            chars[i] = chars[j];
+            chars[j] = temp;
+        }
+
+        // Return the shuffled password as a new string
+        return new String(chars);
+    }
 
     public static String getWebsite() {
         return website;

@@ -18,13 +18,30 @@ public class PasswordGUI extends javax.swing.JFrame {
 
     HashMap<String, String> users;
     String password, website, name, email, decrypt, encryption, decryptedText;
+    private String selectedWebsite;
 
     /**
      * Creates new form LoginGUI
      */
     public PasswordGUI() {
-        initComponents();
-        users = new HashMap<>();
+    initComponents();
+    users = new HashMap<>();
+    updateWebsiteList(); // Populate the list on startup
+
+    // Add a listener to track the selected item in the JList
+    webJList.addListSelectionListener(evt -> {
+        selectedWebsite = webJList.getSelectedValue();
+    });
+        
+    }
+    
+    
+    
+    private void updateWebsiteList() {
+        // Convert the keys (websites) from the HashMap to an array
+        String[] websites = PasswordService.users.keySet().toArray(new String[0]);
+        // Populate the JList with the array of websites
+        webJList.setListData(websites);
     }
 
     /**
@@ -36,56 +53,36 @@ public class PasswordGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        retrieveBtn = new javax.swing.JButton();
-        deleteBtn = new javax.swing.JButton();
-        emailField = new javax.swing.JTextField();
-        passwordField = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        displayArea = new javax.swing.JTextArea();
         addBtn = new javax.swing.JButton();
+        updateBTN = new javax.swing.JButton();
         decryptBtn = new javax.swing.JButton();
         websiteField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         exitBtn = new javax.swing.JButton();
+        retrieveBtn = new javax.swing.JButton();
+        RPG_LengthSpinner = new javax.swing.JSpinner();
+        deleteBtn = new javax.swing.JButton();
+        generateBTN = new javax.swing.JButton();
+        emailField = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        webJList = new javax.swing.JList<>();
+        passwordField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        retrieveBtn.setText("RETRIEVE");
-        retrieveBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                retrieveBtnActionPerformed(evt);
-            }
-        });
-
-        deleteBtn.setText("DELETE");
-        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteBtnActionPerformed(evt);
-            }
-        });
-
-        emailField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailFieldActionPerformed(evt);
-            }
-        });
-
-        passwordField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordFieldActionPerformed(evt);
-            }
-        });
-
-        displayArea.setColumns(20);
-        displayArea.setRows(5);
-        jScrollPane1.setViewportView(displayArea);
 
         addBtn.setText("ADD");
         addBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addBtnActionPerformed(evt);
+            }
+        });
+
+        updateBTN.setText("UPDATE");
+        updateBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBTNActionPerformed(evt);
             }
         });
 
@@ -115,6 +112,43 @@ public class PasswordGUI extends javax.swing.JFrame {
             }
         });
 
+        retrieveBtn.setText("RETRIEVE");
+        retrieveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                retrieveBtnActionPerformed(evt);
+            }
+        });
+
+        RPG_LengthSpinner.setModel(new javax.swing.SpinnerNumberModel(12, 12, 32, 1));
+
+        deleteBtn.setText("DELETE");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
+        generateBTN.setText("Generate");
+        generateBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateBTNActionPerformed(evt);
+            }
+        });
+
+        emailField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailFieldActionPerformed(evt);
+            }
+        });
+
+        jScrollPane2.setViewportView(webJList);
+
+        passwordField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,30 +158,37 @@ public class PasswordGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52)
+                        .addGap(18, 18, 18)
                         .addComponent(retrieveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(46, 46, 46)
+                        .addGap(18, 18, 18)
                         .addComponent(decryptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
+                        .addGap(18, 18, 18)
                         .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(updateBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(websiteField, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel3))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(passwordField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(emailField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(70, 70, 70)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(25, 25, 25))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(generateBTN)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(RPG_LengthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(passwordField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(emailField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(50, 50, 50)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(252, 252, 252)
                 .addComponent(exitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -169,14 +210,20 @@ public class PasswordGUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(generateBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(RPG_LengthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 99, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteBtn)
                     .addComponent(decryptBtn)
                     .addComponent(retrieveBtn)
-                    .addComponent(addBtn))
+                    .addComponent(addBtn)
+                    .addComponent(updateBTN))
                 .addGap(40, 40, 40)
                 .addComponent(exitBtn)
                 .addGap(33, 33, 33))
@@ -185,86 +232,98 @@ public class PasswordGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_emailFieldActionPerformed
-
-    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwordFieldActionPerformed
-
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        // TODO add your handling code here:
         try {
-        // Retrieve input from text fields
-        String website = websiteField.getText();
-        String email = emailField.getText();
-        String password = passwordField.getText();
+            // Get input from text fields
+            String website = websiteField.getText().trim();
+            String email = emailField.getText().trim();
+            String password = passwordField.getText().trim();
 
-        // Encrypt the password and store it
-        String encryptedPassword = PasswordService.encryptPassword(password);
-        PasswordService.users.put(website, encryptedPassword);
+            // Validate input fields
+            if (website.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All fields are required!", "Input Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-        // Display success message
-        displayArea.append("Password saved for website: " + website + "\n");
-    } catch (Exception e) {
-        e.printStackTrace();
-        displayArea.append("Error saving password: " + e.getMessage() + "\n");
-    }
+            // Encrypt the password and save it
+            String encryptedPassword = PasswordService.encryptPassword(password);
+            PasswordService.users.put(website, encryptedPassword);
 
+            // Show success message
+            JOptionPane.showMessageDialog(this, "Password successfully saved for website: " + website, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Clear input fields after successful addition
+            websiteField.setText("");
+            emailField.setText("");
+            passwordField.setText("");
+
+            // Update the website list
+            updateWebsiteList();
+        } catch (Exception e) {
+            // Show error message if something goes wrong
+            JOptionPane.showMessageDialog(this,
+                "Error saving password: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_addBtnActionPerformed
 
-    private void retrieveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrieveBtnActionPerformed
-        // TODO add your handling code here:
-       try {
-        // Get the website from the input field
-        String website = websiteField.getText();
+    private void updateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBTNActionPerformed
+        String justUpdated = selectedWebsite;
 
-        // Check if the website exists in the map
-        if (PasswordService.users.containsKey(website)) {
-            // Retrieve the encrypted password for the website
-            String encryptedPassword = PasswordService.users.get(website);
+        try {
+            // Check if a website is selected
+            if (selectedWebsite == null) {
+                JOptionPane.showMessageDialog(this, "Please select a website to update.", "No Selection", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            // Display the encrypted password in the output area
-            displayArea.append("Encrypted password for " + website + ": " + encryptedPassword + "\n");
-        } else {
-            // If the website is not found, display an appropriate message
-            displayArea.append("Website not found in the records.\n");
+            // Prompt the user for new details using a dialog or fields
+            String newEmail = JOptionPane.showInputDialog(this, "Enter new email for " + selectedWebsite, "Update Email", JOptionPane.QUESTION_MESSAGE);
+            if (newEmail == null || newEmail.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Email cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String newPassword = JOptionPane.showInputDialog(this, "Enter new password for " + selectedWebsite, "Update Password", JOptionPane.QUESTION_MESSAGE);
+            if (newPassword == null || newPassword.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Password cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Encrypt the new password
+            String encryptedPassword = PasswordService.encryptPassword(newPassword);
+
+            // Update the HashMap with the new details
+            PasswordService.users.put(selectedWebsite, encryptedPassword);
+
+            updateWebsiteList();
+
+            // Show success message
+            JOptionPane.showMessageDialog(this, "Details for " + justUpdated + " updated successfully.", "Update Successful", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error updating details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        displayArea.append("Error retrieving password: " + e.getMessage() + "\n");
-    }
-
-    }//GEN-LAST:event_retrieveBtnActionPerformed
-
-    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_deleteBtnActionPerformed
+    }//GEN-LAST:event_updateBTNActionPerformed
 
     private void decryptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBtnActionPerformed
-        // TODO add your handling code here:
         try {
-        // Get website from input field
-        String website = websiteField.getText();
+            if (selectedWebsite == null) {
+                JOptionPane.showMessageDialog(this, "Please select a website from the list.",
+                    "No Website Selected", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-        // Check if the website exists in the map
-        if (PasswordService.users.containsKey(website)) {
-            // Get the encrypted password for the website
-            String encryptedPassword = PasswordService.users.get(website);
-            
-            // Decrypt the password
-            String decryptedPassword = PasswordService.decryptPassword(encryptedPassword);
-
-            // Display the decrypted password
-            displayArea.append("Decrypted password for " + website + ": " + decryptedPassword + "\n");
-        } else {
-            displayArea.append("Website not found in the records.\n");
+            if (PasswordService.users.containsKey(selectedWebsite)) {
+                String encryptedPassword = PasswordService.users.get(selectedWebsite);
+                String decryptedPassword = PasswordService.decryptPassword(encryptedPassword);
+                JOptionPane.showMessageDialog(this, "Decrypted password for " + selectedWebsite + ": " + decryptedPassword, "Password Decrypted", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Website not found in the records.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error decrypting password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        displayArea.append("Error decrypting password: " + e.getMessage() + "\n");
-    }
     }//GEN-LAST:event_decryptBtnActionPerformed
 
     private void websiteFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteFieldActionPerformed
@@ -273,8 +332,77 @@ public class PasswordGUI extends javax.swing.JFrame {
 
     private void exitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitBtnActionPerformed
         // TODO add your handling code here:
-         System.exit(0);
+        System.exit(0);
     }//GEN-LAST:event_exitBtnActionPerformed
+
+    private void retrieveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrieveBtnActionPerformed
+        try {
+            if (selectedWebsite == null) {
+                JOptionPane.showMessageDialog(this, "Please select a website from the list.",
+                    "No Website Selected", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (PasswordService.users.containsKey(selectedWebsite)) {
+                String encryptedPassword = PasswordService.users.get(selectedWebsite);
+                JOptionPane.showMessageDialog(this, "Encrypted password for " + selectedWebsite + ": " + encryptedPassword, "Password Retrieved", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Website not found in the records.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error retrieving password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_retrieveBtnActionPerformed
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        String justDeleted = selectedWebsite;
+
+        try {
+            // Check if a website is selected
+            if (selectedWebsite == null) {
+                JOptionPane.showMessageDialog(this, "Please select a website to delete.", "No Selection", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Confirm deletion
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the password for " + selectedWebsite + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            if (confirm != JOptionPane.YES_OPTION) {
+                return; // User canceled the deletion
+            }
+
+            // Remove the selected website from the HashMap
+            if (PasswordService.users.containsKey(selectedWebsite)) {
+                PasswordService.users.remove(selectedWebsite);
+
+                // Update the JList
+                updateWebsiteList();
+
+                // Display success message
+                JOptionPane.showMessageDialog(this, "Password for " + justDeleted + " deleted successfully.", "Delete Successful", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Selected website not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error deleting password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
+    private void generateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateBTNActionPerformed
+        // Retrieve the length from the JSpinner
+        int length = (int) RPG_LengthSpinner.getValue();
+        // Generate the password using the specified length
+        String generatedPassword = PasswordService.generatePassword(length);
+        // Display the password in the text feild
+        passwordField.setText(generatedPassword);
+    }//GEN-LAST:event_generateBTNActionPerformed
+
+    private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailFieldActionPerformed
+
+    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -313,22 +441,22 @@ public class PasswordGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner RPG_LengthSpinner;
     private javax.swing.JButton addBtn;
     private javax.swing.JButton decryptBtn;
     private javax.swing.JButton deleteBtn;
-    private javax.swing.JTextArea displayArea;
     private javax.swing.JTextField emailField;
     private javax.swing.JButton exitBtn;
+    private javax.swing.JButton generateBTN;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField passwordField;
     private javax.swing.JButton retrieveBtn;
+    private javax.swing.JButton updateBTN;
+    private javax.swing.JList<String> webJList;
     private javax.swing.JTextField websiteField;
     // End of variables declaration//GEN-END:variables
 
-    void setVisible() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
