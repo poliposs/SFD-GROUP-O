@@ -7,7 +7,7 @@ package com.mycompany.passwordmanager;
 import javax.swing.JOptionPane;
 
 /**
- *
+ *https://github.com/poliposs/SFD-GROUP-O
  * @author paulp
  */
 public class RegisterGUI extends javax.swing.JFrame {
@@ -325,11 +325,13 @@ public class RegisterGUI extends javax.swing.JFrame {
         // Display the password in the text feild
         pRegTf.setText(generatedPassword);
     }//GEN-LAST:event_generateBTNActionPerformed
-
+    
+    // Checks input whether correct or filled
     private boolean isInputValid(String email, String password) {
         return email != null && !email.isEmpty() && password != null && !password.isEmpty();
     }
     
+    // Calling register method from RLUserService
     private void registerUser(String email, String password) {
         if (userService.register(email, password)) {
             JOptionPane.showMessageDialog(this, "Registration successful!");
@@ -337,7 +339,28 @@ public class RegisterGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Username already exists.");
         }
     }
-    /**
+    
+    // Calling log in method from RLUserService
+    private void loginUser(String email, String password) {
+        if (userService.login(email, password)) {
+            JOptionPane.showMessageDialog(this, "Login successful!");
+            openPasswordGUI();
+            // Proceed to Password Manager GUI
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid email or password.");
+        }
+    }
+    
+    private void openPasswordGUI() {
+        // Create a new instance of PasswordGUI and set it visible
+        PasswordGUI passwordManager = new PasswordGUI();
+        passwordManager.setVisible(true);  // Open the new GUI window
+
+        // Optionally close the current RegisterGUI window
+        this.dispose();
+    }
+    
+     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -370,25 +393,6 @@ public class RegisterGUI extends javax.swing.JFrame {
                 new RegisterGUI().setVisible(true);
             }
         });
-    }
-    
-    private void loginUser(String email, String password) {
-        if (userService.login(email, password)) {
-            JOptionPane.showMessageDialog(this, "Login successful!");
-            openPasswordGUI();
-            // Proceed to Password Manager GUI
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid email or password.");
-        }
-    }
-    
-    private void openPasswordGUI() {
-        // Create a new instance of PasswordManagerGUI and set it visible
-        PasswordGUI passwordManager = new PasswordGUI();
-        passwordManager.setVisible(true);  // Open the new GUI window
-
-        // Optionally close the current RegisterGUI window
-        this.dispose();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner RPG_LengthSpinner;
