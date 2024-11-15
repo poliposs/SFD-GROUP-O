@@ -4,7 +4,11 @@
  */
 package com.mycompany.passwordmanager;
 
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import java.lang.String;
 
 /**
  *
@@ -12,11 +16,15 @@ import javax.swing.JOptionPane;
  */
 public class PasswordGUI extends javax.swing.JFrame {
 
+    HashMap<String, String> users;
+    String password, website, name, email, decrypt, encryption, decryptedText;
+
     /**
      * Creates new form LoginGUI
      */
     public PasswordGUI() {
         initComponents();
+        users = new HashMap<>();
     }
 
     /**
@@ -30,11 +38,14 @@ public class PasswordGUI extends javax.swing.JFrame {
 
         updateBtn = new javax.swing.JButton();
         retrieveBtn = new javax.swing.JButton();
-        saveBtn = new javax.swing.JButton();
-        nameField = new javax.swing.JTextField();
+        deleteBtn = new javax.swing.JButton();
+        emailField = new javax.swing.JTextField();
         passwordField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         displayArea = new javax.swing.JTextArea();
+        addBtn = new javax.swing.JButton();
+        decryptBtn = new javax.swing.JButton();
+        websiteField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,33 +57,81 @@ public class PasswordGUI extends javax.swing.JFrame {
         });
 
         retrieveBtn.setText("RETRIEVE");
+        retrieveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                retrieveBtnActionPerformed(evt);
+            }
+        });
 
-        saveBtn.setText("SAVE");
+        deleteBtn.setText("DELETE");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
+        emailField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailFieldActionPerformed(evt);
+            }
+        });
+
+        passwordField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordFieldActionPerformed(evt);
+            }
+        });
 
         displayArea.setColumns(20);
         displayArea.setRows(5);
         jScrollPane1.setViewportView(displayArea);
+
+        addBtn.setText("ADD");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBtnActionPerformed(evt);
+            }
+        });
+
+        decryptBtn.setText("DECRYPT");
+        decryptBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decryptBtnActionPerformed(evt);
+            }
+        });
+
+        websiteField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                websiteFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(164, 164, 164)
-                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(retrieveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
-                .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nameField)
-                    .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(emailField)
+                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(websiteField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(decryptBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(updateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                        .addGap(44, 44, 44)
+                        .addComponent(retrieveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52)
+                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(100, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,24 +139,115 @@ public class PasswordGUI extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
+                        .addComponent(websiteField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
                         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(updateBtn)
                     .addComponent(retrieveBtn)
-                    .addComponent(saveBtn))
-                .addGap(139, 139, 139))
+                    .addComponent(deleteBtn)
+                    .addComponent(addBtn))
+                .addGap(45, 45, 45)
+                .addComponent(decryptBtn)
+                .addGap(67, 67, 67))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
-     
+
     }//GEN-LAST:event_updateBtnActionPerformed
+
+    private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailFieldActionPerformed
+
+    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordFieldActionPerformed
+
+    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
+        // TODO add your handling code here:
+        try {
+        // Retrieve input from text fields
+        String website = websiteField.getText();
+        String email = emailField.getText();
+        String password = passwordField.getText();
+
+        // Encrypt the password and store it
+        String encryptedPassword = PasswordService.encryptPassword(password);
+        PasswordService.users.put(website, encryptedPassword);
+
+        // Display success message
+        displayArea.append("Password saved for website: " + website + "\n");
+    } catch (Exception e) {
+        e.printStackTrace();
+        displayArea.append("Error saving password: " + e.getMessage() + "\n");
+    }
+
+    }//GEN-LAST:event_addBtnActionPerformed
+
+    private void retrieveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrieveBtnActionPerformed
+        // TODO add your handling code here:
+       try {
+        // Get the website from the input field
+        String website = websiteField.getText();
+
+        // Check if the website exists in the map
+        if (PasswordService.users.containsKey(website)) {
+            // Retrieve the encrypted password for the website
+            String encryptedPassword = PasswordService.users.get(website);
+
+            // Display the encrypted password in the output area
+            displayArea.append("Encrypted password for " + website + ": " + encryptedPassword + "\n");
+        } else {
+            // If the website is not found, display an appropriate message
+            displayArea.append("Website not found in the records.\n");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        displayArea.append("Error retrieving password: " + e.getMessage() + "\n");
+    }
+
+    }//GEN-LAST:event_retrieveBtnActionPerformed
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
+    private void decryptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBtnActionPerformed
+        // TODO add your handling code here:
+        try {
+        // Get website from input field
+        String website = websiteField.getText();
+
+        // Check if the website exists in the map
+        if (PasswordService.users.containsKey(website)) {
+            // Get the encrypted password for the website
+            String encryptedPassword = PasswordService.users.get(website);
+            
+            // Decrypt the password
+            String decryptedPassword = PasswordService.decryptPassword(encryptedPassword);
+
+            // Display the decrypted password
+            displayArea.append("Decrypted password for " + website + ": " + decryptedPassword + "\n");
+        } else {
+            displayArea.append("Website not found in the records.\n");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        displayArea.append("Error decrypting password: " + e.getMessage() + "\n");
+    }
+    }//GEN-LAST:event_decryptBtnActionPerformed
+
+    private void websiteFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_websiteFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,13 +286,16 @@ public class PasswordGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addBtn;
+    private javax.swing.JButton decryptBtn;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JTextArea displayArea;
+    private javax.swing.JTextField emailField;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameField;
     private javax.swing.JTextField passwordField;
     private javax.swing.JButton retrieveBtn;
-    private javax.swing.JButton saveBtn;
     private javax.swing.JButton updateBtn;
+    private javax.swing.JTextField websiteField;
     // End of variables declaration//GEN-END:variables
 
     void setVisible() {
