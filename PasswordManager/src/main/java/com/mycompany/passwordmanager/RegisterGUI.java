@@ -4,24 +4,22 @@
  */
 package com.mycompany.passwordmanager;
 
-import java.security.*;
-import javax.swing.*;
-import java.util.*;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author paulp
  */
 public class RegisterGUI extends javax.swing.JFrame {
-// HashMaps for Register/Log In - Paul
-    public HashMap<String, String> users;
+    // HashMaps for Register/Log In - Paul
+    private RLUserService userService;
     
     /**
      * Creates new form RegisterGUI
      */
     public RegisterGUI() {
         initComponents();
-        users = new HashMap<>();
+        userService = new RLUserService();
     }
 
     /**
@@ -283,40 +281,28 @@ public class RegisterGUI extends javax.swing.JFrame {
     private void signBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signBtnActionPerformed
         // TODO add your handling code here:
         String email = eRegTf.getText();
-        if (users.containsKey(email)) {
-            JOptionPane.showMessageDialog(null, "Username already exists. Please choose another one.");
-            return;
-        }
-        
         String password = pRegTf.getText();
-        String hashedPassword = hashPassword(password);
-        users.put(email, hashedPassword);
-        System.out.println("Registration successful!");
-        
-        
+
+        // Validate input
+        if (isInputValid(email, password)) {
+            // Attempt to register
+            registerUser(email, password);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter both email and password.");
+        }
     }//GEN-LAST:event_signBtnActionPerformed
 
     private void logBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logBtnActionPerformed
         // TODO add your handling code here:
         String email = eLogTf.getText();
-        if (!users.containsKey(email)) {
-            JOptionPane.showMessageDialog(null, "Email not found. Please register first.");
-        }
-        
         String password = pLogTf.getText();
-                String hashedPassword = hashPassword(password);
 
-        if (users.get(email).equals(hashedPassword)) {
-            JOptionPane.showMessageDialog(null, "Login successful! Access granted.");
-             // Open the Password Manager GUI
-            PasswordGUI passwordManager = new PasswordGUI();
-            passwordManager.setVisible(true);
-
-            // Close the current RegisterGUI window
-            this.setVisible(false);
-            this.dispose(); // Optional: Use if you want to fully dispose of this window
+        // Validate input
+        if (isInputValid(email, password)) {
+            // Attempt to login
+            loginUser(email, password);
         } else {
-            JOptionPane.showMessageDialog(null, "Incorrect password. Please try again.");
+            JOptionPane.showMessageDialog(this, "Please enter both email and password.");
         }
     }//GEN-LAST:event_logBtnActionPerformed
 
@@ -340,6 +326,17 @@ public class RegisterGUI extends javax.swing.JFrame {
         pRegTf.setText(generatedPassword);
     }//GEN-LAST:event_generateBTNActionPerformed
 
+    private boolean isInputValid(String email, String password) {
+        return email != null && !email.isEmpty() && password != null && !password.isEmpty();
+    }
+    
+    private void registerUser(String email, String password) {
+        if (userService.register(email, password)) {
+            JOptionPane.showMessageDialog(this, "Registration successful!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Username already exists.");
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -375,21 +372,24 @@ public class RegisterGUI extends javax.swing.JFrame {
         });
     }
     
-        private static String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
+    private void loginUser(String email, String password) {
+        if (userService.login(email, password)) {
+            JOptionPane.showMessageDialog(this, "Login successful!");
+            openPasswordGUI();
+            // Proceed to Password Manager GUI
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid email or password.");
         }
     }
+    
+    private void openPasswordGUI() {
+        // Create a new instance of PasswordManagerGUI and set it visible
+        PasswordGUI passwordManager = new PasswordGUI();
+        passwordManager.setVisible(true);  // Open the new GUI window
 
+        // Optionally close the current RegisterGUI window
+        this.dispose();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner RPG_LengthSpinner;
     private javax.swing.JPanel btnPanel;
