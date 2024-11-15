@@ -248,9 +248,12 @@ public class PasswordGUI extends javax.swing.JFrame {
             // Encrypts the password and saves it
             String encryptedPassword = PasswordService.encryptPassword(password);
             PasswordService.users.put(website, encryptedPassword);
+            
+            String hashedEmail = PasswordService.hashedEmail(email);
+            PasswordService.emailMap.put(website, hashedEmail);
 
             // Show success message
-            JOptionPane.showMessageDialog(this, "Password successfully saved for website: " + website, "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Details successfully saved for website: " + website, "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Clear input fields after successful addition
             websiteField.setText("");
@@ -293,9 +296,11 @@ public class PasswordGUI extends javax.swing.JFrame {
 
             // Encrypt the new password
             String encryptedPassword = PasswordService.encryptPassword(newPassword);
+            String hashedEmail = PasswordService.hashedEmail(newEmail);
 
             // Update the HashMap with the new details
             PasswordService.users.put(selectedWebsite, encryptedPassword);
+            PasswordService.emailMap.put(selectedWebsite, hashedEmail);
 
             updateWebsiteList();
 
@@ -345,7 +350,11 @@ public class PasswordGUI extends javax.swing.JFrame {
 
             if (PasswordService.users.containsKey(selectedWebsite)) {
                 String encryptedPassword = PasswordService.users.get(selectedWebsite);
-                JOptionPane.showMessageDialog(this, "Encrypted password for " + selectedWebsite + ": " + encryptedPassword, "Password Retrieved", JOptionPane.INFORMATION_MESSAGE);
+                String email = PasswordService.emailMap.get(selectedWebsite); // Retrieve email from a separate map
+        
+        // Hash the email using the hashedEmail method
+        String hashedEmail = PasswordService.hashedEmail(email);
+                JOptionPane.showMessageDialog(this, "Encrypted password for " + selectedWebsite + ": " + encryptedPassword + "And Hashed email: " + hashedEmail , "Password Retrieved", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Website not found in the records.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -371,8 +380,9 @@ public class PasswordGUI extends javax.swing.JFrame {
             }
 
             // Remove the selected website from the HashMap
-            if (PasswordService.users.containsKey(selectedWebsite)) {
+            if (PasswordService.users.containsKey(selectedWebsite) && PasswordService.emailMap.containsKey(selectedWebsite)) {
                 PasswordService.users.remove(selectedWebsite);
+                PasswordService.emailMap.remove(selectedWebsite);
 
                 // Update the JList
                 updateWebsiteList();

@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 //https://github.com/poliposs/SFD-GROUP-O
 package com.mycompany.passwordmanager;
 
@@ -19,16 +18,17 @@ public class PasswordService {
 
     // Using a static map to store users and their hashed passwords
     public static final HashMap<String, String> users = new HashMap<>();
+    public static HashMap<String, String> emailMap = new HashMap<>();
     private static SecretKey key;
     private static Cipher ci;
     private static String website, password, encryption;
-    
-     // Character pools for password generation
+
+    // Character pools for password generation
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String DIGITS = "0123456789";
     private static final String SYMBOLS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/";
-    
+
     // Pool of all possible characters
     private static final String ALL_CHARS = UPPER + LOWER + DIGITS + SYMBOLS;
 
@@ -46,8 +46,8 @@ public class PasswordService {
             e.printStackTrace();
         }
     }
-    
-    private static String hashedEmail(String email) {
+
+    public static String hashedEmail(String email) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(email.getBytes());
@@ -99,7 +99,7 @@ public class PasswordService {
             throw e;
         }
     }
-    
+
     public static String generatePassword(int length) {
         // Password length must meet security guidelines
         if (length < 12) {
@@ -132,7 +132,7 @@ public class PasswordService {
     private static String shufflePassword(String password) {
         // Convert the password into a character array for shuffling
         char[] chars = password.toCharArray();
-        
+
         // Fisher-Yates shuffle algorithm for randomizing the order
         for (int i = chars.length - 1; i > 0; i--) {
             int j = RANDOM.nextInt(i + 1); // Select a random index
