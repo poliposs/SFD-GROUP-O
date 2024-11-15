@@ -8,8 +8,6 @@
 package com.mycompany.passwordmanager;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import java.lang.String;
 
@@ -20,7 +18,6 @@ import java.lang.String;
 public class PasswordGUI extends javax.swing.JFrame {
 
     HashMap<String, String> users;
-    String password, website, name, email, decrypt, encryption, decryptedText;
     private String selectedWebsite;
 
     /**
@@ -248,7 +245,7 @@ public class PasswordGUI extends javax.swing.JFrame {
                 return;
             }
 
-            // Encrypt the password and save it
+            // Encrypts the password and saves it
             String encryptedPassword = PasswordService.encryptPassword(password);
             PasswordService.users.put(website, encryptedPassword);
 
@@ -368,7 +365,7 @@ public class PasswordGUI extends javax.swing.JFrame {
             }
 
             // Confirm deletion
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the password for " + selectedWebsite + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the details for " + selectedWebsite + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirm != JOptionPane.YES_OPTION) {
                 return; // User canceled the deletion
             }
@@ -381,12 +378,12 @@ public class PasswordGUI extends javax.swing.JFrame {
                 updateWebsiteList();
 
                 // Display success message
-                JOptionPane.showMessageDialog(this, "Password for " + justDeleted + " deleted successfully.", "Delete Successful", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "The details for " + justDeleted + " deleted successfully.", "Delete Successful", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Selected website not found.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error deleting password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error deleting details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 

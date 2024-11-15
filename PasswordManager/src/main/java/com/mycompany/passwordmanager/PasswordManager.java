@@ -16,5 +16,8 @@ public class PasswordManager {
 
         RegisterGUI myGUI = new RegisterGUI();
         myGUI.setVisible(true);
+        
+        PasswordGUI myG = new PasswordGUI();
+        myG.setVisible(true);
     }
 }

@@ -13,7 +13,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.security.SecureRandom;
 
 public class PasswordService {
@@ -22,7 +21,7 @@ public class PasswordService {
     public static final HashMap<String, String> users = new HashMap<>();
     private static SecretKey key;
     private static Cipher ci;
-    private static String website, password, encryption, decryptedText, email, encryptedText, plainText;
+    private static String website, password, encryption;
     
      // Character pools for password generation
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -36,19 +35,9 @@ public class PasswordService {
     // SecureRandom ensures cryptographic-grade randomness
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public PasswordService(String website, String password, String encryption, String decryptedText, String email) {
-        this.website = website;
-        this.password = password;
-        this.encryption = encryption;
-        this.decryptedText = decryptedText;
-        this.email = email;
-        this.encryptedText = encryptedText;
-        this.plainText = plainText;
-    }
-
     static {
         try {
-            // Initialize Cipher in static block
+            // Initialises the Cipher in a static block
             ci = Cipher.getInstance("AES");
             KeyGenerator keyGen = KeyGenerator.getInstance("AES");
             keyGen.init(128);
@@ -57,13 +46,28 @@ public class PasswordService {
             e.printStackTrace();
         }
     }
+    
+    private static String hashedEmail(String email) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(email.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashedBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static String retrievePassword() throws Exception {
         System.out.println("Enter website: ");
 
         encryption = encryptPassword(password);
 
-        if (users.containsKey(website) && users.get(website).equals(encryption)) {
+        if (users.containsKey(website) && users.get(website).equals(encryption)) { // checks if a website is there and if it matches its password
             System.out.println("Verification complete.");
             System.out.println("Encrypted password: " + encryption);
         } else {
@@ -74,9 +78,9 @@ public class PasswordService {
 
     public static String encryptPassword(String plainText) {
         try {
-            ci.init(Cipher.ENCRYPT_MODE, key);
-            byte[] plainTextByte = plainText.getBytes();
-            byte[] encryptedByte = ci.doFinal(plainTextByte);
+            ci.init(Cipher.ENCRYPT_MODE, key); // Intialises the cipher
+            byte[] plainTextByte = plainText.getBytes(); // Puts the text to bytes
+            byte[] encryptedByte = ci.doFinal(plainTextByte); // the encryption
             return Base64.getEncoder().encodeToString(encryptedByte);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,9 +90,9 @@ public class PasswordService {
 
     public static String decryptPassword(String encryptedText) throws Exception {
         try {
-            byte[] encryptedTextByte = Base64.getDecoder().decode(encryptedText);
-            ci.init(Cipher.DECRYPT_MODE, key);
-            byte[] decryptedByte = ci.doFinal(encryptedTextByte);
+            byte[] encryptedTextByte = Base64.getDecoder().decode(encryptedText); // Grabs the encrypted text and puts it to bytes  
+            ci.init(Cipher.DECRYPT_MODE, key); // Intialises the cipher
+            byte[] decryptedByte = ci.doFinal(encryptedTextByte); // The decryption
             return new String(decryptedByte);
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,62 +143,6 @@ public class PasswordService {
 
         // Return the shuffled password as a new string
         return new String(chars);
-    }
-
-    public static String getWebsite() {
-        return website;
-    }
-
-    public static void setWebsite(String website) {
-        PasswordService.website = website;
-    }
-
-    public static String getPassword() {
-        return password;
-    }
-
-    public static void setPassword(String password) {
-        PasswordService.password = password;
-    }
-
-    public static String getEncryption() {
-        return encryption;
-    }
-
-    public static void setEncryption(String encryption) {
-        PasswordService.encryption = encryption;
-    }
-
-    public static String getEmail() {
-        return email;
-    }
-
-    public static void setEmail(String email) {
-        PasswordService.email = email;
-    }
-
-    public static String decryptedText() {
-        return email;
-    }
-
-    public static void setDecryptedText(String decryptedText) {
-        PasswordService.decryptedText = decryptedText;
-    }
-
-    public static String getEncryptedText() {
-        return encryptedText;
-    }
-
-    public static void setEncryptedText(String encryptedText) {
-        PasswordService.encryptedText = encryptedText;
-    }
-
-    public static String getPlainText() {
-        return plainText;
-    }
-
-    public static void setPlainText(String plainText) {
-        PasswordService.plainText = plainText;
     }
 
 }
